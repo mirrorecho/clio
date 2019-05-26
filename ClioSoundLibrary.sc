@@ -12,7 +12,7 @@ ClioSoundLibrary : ClioLibrary {
 
 		this.paths.do { arg pathString;
 
-			SoundFile.collect(f ++ "/*");
+			// SoundFile.collect(f ++ "/*");
 
 			PathName(pathString).folders.do {arg folder;
 				folder.postln;

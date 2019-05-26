@@ -30,6 +30,14 @@ Clio {
 
 	}
 
+	*path {
+		^PathName(this.filenameSymbol.asString).pathOnly;
+	}
+
+	*openAll {
+		(this.path ++ "*.sc").pathMatch.do{|doc|doc.openDocument;};
+	}
+
 	*testMe {
 		"I am Clio".postln;
 	}
