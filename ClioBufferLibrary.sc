@@ -1,125 +1,20 @@
 
 ClioBufferLibrary : ClioLibrary {
 
-	var <>paths;
-
-	*new { arg ...paths;
-		^super.new.initMe(*paths);
+	makeBuffer { arg key, length, channels;
+		^this.putKey(key, Buffer.alloc(Clio.server, Clio.server.sampleRate * 8.0, 2));
 	}
 
-	initMe { arg ...paths;
-		this.paths = paths.asSet;
-		this.paths.do { arg pathString; this.addFolder(pathString); }
-	}
-
-	addFolder { arg folderString, key=[];
-
-		SoundFile.collect(folderString ++ "*").do { arg file;
-			var soundSymbol = file.path.basename.splitext[0].asSymbol;
-			this.put(*(key ++ [soundSymbol, file]));
-		};
-
-
-		// recursively add subfolders:
-		PathName(folderString).folders.do {arg folder;
-			this.addFolder(folder.pathOnly, key ++ [folder.folderName.asSymbol]);
-		};
+	play { arg key;
 
 	}
-
-
-	// TO DO... add method to collect into buffer library
 
 	// TO DO... add playback
 
 }
 
 
-	// load: { arg self, libraries=[];
-	// 	{
-	// 		s.sync;
-	// 		libraries.do { arg libraryName;
-	// 			self.loadLibrary(libraryName);
-	// 			s.sync;
-	// 		};
-	// 	}.forkIfNeeded;
-	// },
-	//
-	// loadLibrary: {arg self, libraryName, files=[]; // if empty arry for files, then will load all in the dir
-	// 	var postMsgs = ["Loading buffers from '" ++ libraryName ++ "' library:"], eLibrary = ();
-	// 	SoundFile.collectIntoBuffers(self.libraryPath ++ libraryName ++ "/*").do { arg buffer;
-	// 		var bufferName = buffer.path.basename.splitext[0];
-	// 		eLibrary[bufferName.asSymbol] = buffer;
-	// 		postMsgs = postMsgs.add("~ss.buf['" ++ libraryName ++ "']['" ++ bufferName ++ "']");
-	// 	};
-	// 	self.makeModule(libraryName, eLibrary);
-	// 	~ss.postPretty(postMsgs);
-	// },
-	//
-	//
-	// loadLibraries: {arg self, libraryName, files=[]; // if empty arry for files, then will load all in the dir
-	// 	var postMsgs = ["Loading buffers from '" ++ libraryName ++ "' library:"], eLibrary = ();
-	// 	SoundFile.collectIntoBuffers(self.libraryPath ++ libraryName ++ "/*").do { arg buffer;
-	// 		var bufferName = buffer.path.basename.splitext[0];
-	// 		eLibrary[bufferName.asSymbol] = buffer;
-	// 		postMsgs = postMsgs.add("~ss.buf['" ++ libraryName ++ "']['" ++ bufferName ++ "']");
-	// 	};
-	// 	self.makeModule(libraryName, eLibrary);
-	// 	~ss.postPretty(postMsgs);
-	// },
-	//
-	//
-	//
-	// makeBus { arg name, channels = 2, msgBusType = \audio;
-	// 	var myBus = this.at(name);
-	//
-	// 	if (myBus != nil, { myBus.free; });
-	//
-	// 	myBus = Message(Bus, msgBusType, [Clio.server, channels]).value;
-	//
-	// 	this.put(name, myBus);
-	//
-	// 	^myBus;
-	// }
-	//
-	//
-	// makeControlBus { arg name, channels = 1;
-	// 	^this.makeBus(name, channels, \control);
-	// }
-	//
-	//
-	//
-	// }
-	//
-	//
-	// sounds = ClioBufferLibrary("/Users/rwest/Echo/Sounds/Library/");
-	//
-	//
-	//
-	// loadLibrary: {arg self, libraryName, files=[]; // if empty arry for files, then will load all in the dir
-	// var postMsgs = ["Loading buffers from '" ++ libraryName ++ "' library:"], eLibrary = ();
-	// SoundFile.collectIntoBuffers(self.libraryPath ++ libraryName ++ "/*").do { arg buffer;
-	// 	var bufferName = buffer.path.basename.splitext[0];
-	// 	eLibrary[bufferName.asSymbol] = buffer;
-	// 	postMsgs = postMsgs.add("~ss.buf['" ++ libraryName ++ "']['" ++ bufferName ++ "']");
-	// };
-	// self.makeModule(libraryName, eLibrary);
-	// ~ss.postPretty(postMsgs);
-	// },
-	//
-	// load: { arg self, libraries=[];
-	// {
-	// 	s.sync;
-	// 	libraries.do { arg libraryName;
-	// 		self.loadLibrary(libraryName);
-	// 		s.sync;
-	// 	};
-	// }.forkIfNeeded;
-	// },
-
-
-
-
+// TO DO move these to standard synths....
 // SynthDef(
 // 	"bufPlay", {arg bufnum, amp=1.0, rate=1.0, start=0, out=~ss.bus.master;
 // 		var sig = PlayBuf.ar(2,

@@ -16,7 +16,7 @@ ClioSoundLibrary : ClioLibrary {
 
 		SoundFile.collect(folderString ++ "*").do { arg file;
 			var soundSymbol = file.path.basename.splitext[0].asSymbol;
-			this.put(*(key ++ [soundSymbol, file]));
+			this.putKey(key ++ [soundSymbol], file);
 		};
 
 
@@ -27,12 +27,28 @@ ClioSoundLibrary : ClioLibrary {
 
 	}
 
+	toBufferLibrary { arg keyPath, bufferLibrary;
+		bufferLibrary = bufferLibrary ?? ClioBufferLibrary.new;
 
-	// TO DO... add method to collect into buffer library
+		this.leafDoFrom(keyPath, {arg key, file;
+			bufferLibrary.putKey(key, SoundFile.collectIntoBuffers(file.path)[0]);
+		});
+		^bufferLibrary;
+	}
 
-	// TO DO... add playback
+
+	// TO DO... add playback...
+
+	// THIS DOES'T WORK HERE AS IT DOES IN THE INTERPRETER ... WHY???
+	// play {arg key;
+	// 	// TO DO... this leaves buffers lying around... rethink
+	// 	var myEvent = this.atKey(key).cue;
+	// 	myEvent.play;
+	// }
+
+
+	// TO DO... add method to create new sound file
 
 }
-
 
 

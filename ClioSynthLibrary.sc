@@ -1,16 +1,16 @@
 
 ClioSynthLibrary : ClioLibrary {
 
-	makeSynth { arg name, synthDefName, args=[];
-		var mySynth = this.at(name);
+	makeSynth { arg key, synthDefName, args=[];
+		var mySynth = this.atKey(key);
 
 		if (mySynth != nil, { mySynth.free; });
 
-		if (synthDefName == nil, {synthDefName=name;});
+		if (synthDefName == nil, {synthDefName=key.asArray.last;});
 
 		mySynth = Synth(synthDefName, args);
 
-		this.put(name, mySynth);
+		this.putKey(key, mySynth);
 
 		^mySynth;
 
@@ -18,4 +18,3 @@ ClioSynthLibrary : ClioLibrary {
 
 
 }
-
