@@ -26,9 +26,15 @@ ClioLibrary : Library {
 
 	putFromEnvironment { arg key = [], envir; //, maxDepth=9; // maxDepth to prevent infinite recursion of environments refer to one another
 		envir.collect { arg envirValue, envirKey;
-			// TO DO: if item is a kind of environment, then recursively add (with maxDepth);
+			// TO DO MAYBE: if item is a kind of environment, then recursively add (with maxDepth);
 			this.putKey(key.asArray ++ [envirKey], envirValue);
 		};
+	}
+
+	putFromFile { arg key = [], filePath;
+		var envir = Environment.make;
+		envir.use {filePath.load};
+		this.putFromEnvironment(key, envir);
 	}
 
 }
