@@ -1,13 +1,17 @@
 
 ClioP : ClioFactory {
 
+	// TO DO MAYBE: move to ClioFactory for general use?
 	play { arg tempoClock;
 		^this.make.play(clock:tempoClock);
 	}
 
-
-
 }
+
+
+// create factory classes for standard pattern classes? (ClioPbind, Pmono, Pseq, etc.?)
+
+
 
 // (
 // title: "Arrangement Tools with Patterns",
