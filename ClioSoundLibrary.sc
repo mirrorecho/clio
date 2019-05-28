@@ -1,15 +1,8 @@
 
 ClioSoundLibrary : ClioLibrary {
 
-	var <>paths;
-
-	*new { arg ...paths;
-		^super.new.initMe(*paths);
-	}
-
-	initMe { arg ...paths;
-		this.paths = paths.asSet;
-		this.paths.do { arg pathString; this.addFolder(pathString); }
+	goPath {arg pathString;
+		this.addFolder(pathString);
 	}
 
 	addFolder { arg folderString, key=[];

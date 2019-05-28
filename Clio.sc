@@ -44,3 +44,55 @@ Clio {
 
 }
 
+
+// ATTEMPT TO WORK WITH ServerBoot... but creates infite loop on 2nd reboot... WHY?...
+/*Clio {
+	classvar <>server, <>busses, <>synths;
+
+	*go { arg callback;
+
+		this.server = Server.local;
+
+		CmdPeriod.removeAll;
+			CmdPeriod.add({
+				MIDIdef.freeAll;
+				OSCdef.freeAll;
+				Server.freeAll;
+				Server.all.do{ |s| // freeing everything for ALL servers, just in case things are crazy
+					Buffer.freeAll(s);
+					s.newAllocators; // new allocators (numbers) for busses, buffers, etc.
+					s.freeAll;
+				};
+
+				this.busses = ClioBusLibrary.new;
+				this.synths = ClioSynthLibrary.new;
+
+				ClioMastering.go { callback.value; };
+
+			});
+
+		ServerBoot.removeAll;
+		ServerBoot.add({
+			// Server.killAll;  // just in case things are crazy
+
+			this.server.waitForBoot({CmdPeriod.run;});
+
+			// this.server.reboot;
+		}, this.server);
+
+	}
+
+	*path {
+		^PathName(this.filenameSymbol.asString).pathOnly;
+	}
+
+	*openAll {
+		(this.path ++ "*.sc").pathMatch.do{|doc|doc.openDocument;};
+	}
+
+	*testMe {
+		"I am Clio".postln;
+	}
+
+}*/
+
