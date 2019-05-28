@@ -1,4 +1,5 @@
 
+// TO DO MAYBE: is this a factory?
 ClioSynthLibrary : ClioLibrary {
 
 	makeSynth { arg key, synthDefName, args=[];
