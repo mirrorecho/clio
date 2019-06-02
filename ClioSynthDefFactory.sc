@@ -10,14 +10,7 @@ ClioSynthDefFactory : ClioFactory {
 
 	make { arg name ...args; // warning these cannot contain factories, should they?
 
-		var madeThisArgs = this.args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
-		var madeMakeArgs = args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
-		var kwargs = (madeThisArgs.asDict ++ madeMakeArgs.asDict);
-		kwargs.know = true;
-
-		kwargs.postln;
-
-		^this.defineFunction.value(name, kwargs);
+		^this.defineFunction.value(name, this.makeKwargs(*args));
 	}
 
 	// TO DO: better handle nil name

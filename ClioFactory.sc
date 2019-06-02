@@ -13,9 +13,14 @@ ClioFactory {
 		this.args = args;
 	}
 
-	make {
-		var madeArgs = this.args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
-		^this.makeType.new(*madeArgs);
+	makeKwargs { arg ...args;
+		var madeThisArgs = this.args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
+		var madeNewArgs = args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
+		^(madeThisArgs.asDict ++ madeNewArgs.asDict);
+	}
+
+	make { arg ...args;
+		^this.makeType.new(*this.makeKwargs(*args).asPairs);
 	}
 
 	// performs a deep copy and replaces pairwise args
