@@ -15,6 +15,8 @@ ClioSynthDefFactory : ClioFactory {
 		var kwargs = (madeThisArgs.asDict ++ madeMakeArgs.asDict);
 		kwargs.know = true;
 
+		kwargs.postln;
+
 		^this.defineFunction.value(name, kwargs);
 	}
 

@@ -45,6 +45,27 @@ Clio {
 }
 
 
+
+// TO DO
+/*
+- YAY! A single SoundLibrary combining the above.
+- - - load buffers lazily, or,  upfront with loadBuffers(keys)
+- - - create new abstract definition of a sound, with ability to allocate buffer from it
+- - - create soundfile from buffer and write it
+- - - read from bus into buffer
+- - - (eventually) visualization tools with SoundFileView
+- - - (eventually) tagging and query tools
+- finish sampler
+- default kwargs for SynthDefFactory and SamplerFactory
+- SynthDefLibrary
+- SamplerLibrary
+- SampleDataLibrary
+- OSC setup
+- MIDI setup
+- MIDI/OSC pattern playback
+*/
+
+
 // ATTEMPT TO WORK WITH ServerBoot... but creates infite loop on 2nd reboot... WHY?...
 /*Clio {
 	classvar <>server, <>busses, <>synths;

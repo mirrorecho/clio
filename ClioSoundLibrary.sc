@@ -1,17 +1,19 @@
 
+
 ClioSoundLibrary : ClioLibrary {
 
-	goPath {arg pathString;
-		this.addFolder(pathString);
+	var <>soundPaths;
+
+	go { arg ...paths;
+		this.soundPaths = this.soundPaths ++ paths;
+		this.soundPaths.do { arg folderString; this.addFolder(folderString); }
 	}
 
 	addFolder { arg folderString, key=[];
 
-		SoundFile.collect(folderString ++ "*").do { arg file;
-			var soundSymbol = file.path.basename.splitext[0].asSymbol;
-			this.putKey(key ++ [soundSymbol], file);
+		ClioSound.collect(folderString).do { arg mySound;
+			this.putKey(key ++ [mySound.name], mySound);
 		};
-
 
 		// recursively add subfolders:
 		PathName(folderString).folders.do {arg folder;
@@ -20,14 +22,14 @@ ClioSoundLibrary : ClioLibrary {
 
 	}
 
-	toBufferLibrary { arg keyPath, bufferLibrary;
+/*	toBufferLibrary { arg keyPath, bufferLibrary;
 		bufferLibrary = bufferLibrary ?? ClioBufferLibrary.new;
 
 		this.leafDoFrom(keyPath, {arg key, file;
 			bufferLibrary.putKey(key, SoundFile.collectIntoBuffers(file.path)[0]);
 		});
 		^bufferLibrary;
-	}
+	}*/
 
 
 	// TO DO... add playback...

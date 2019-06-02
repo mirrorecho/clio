@@ -10,7 +10,7 @@ ClioP : ClioFactory {
 
 
 // create factory classes for standard pattern classes? (ClioPbind, Pmono, Pseq, etc.?)
-
+// SoundFile
 
 
 // (

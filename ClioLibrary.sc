@@ -3,8 +3,8 @@ ClioLibrary : Library {
 
 	var <>catalogPaths;
 
-	*new { arg ...catalogPaths;
-		^super.new.go(*catalogPaths);
+	*new { arg ...paths;
+		^super.new.go(*paths);
 	}
 
 	*catalog { arg catalogFunction, isMainFunction={}, isNotMainFunction={};
@@ -18,13 +18,9 @@ ClioLibrary : Library {
 		^catalogEnvir;
 	}
 
-	go { arg ...catalogPaths;
-		this.catalogPaths = catalogPaths;
+	go { arg ...paths;
+		this.catalogPaths = this.catalogPaths ++ paths;
 		this.catalogPaths.do { arg catalogPath; this.putFromCatalog([], catalogPath); }
-	}
-
-	goPath {arg pathString;
-		this.putFromFile([], pathString);
 	}
 
 	putKey { arg key, item; // key can be either a symbol or an array of symbols
