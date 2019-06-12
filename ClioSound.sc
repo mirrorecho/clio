@@ -46,6 +46,8 @@ ClioSound {
 
 	sampleRate { ^this.buffer.sampleRate }
 
+	play { ^this.buffer.play }
+
 	freq {}
 
 	//
@@ -82,7 +84,3 @@ ClioSound {
 	addLocalCatalog{ arg librarySymbol, catalogName, key=[];
 		^Message(this, librarySymbol).value.putFromCatalog(key, this.path ++ catalogName.asString ++ ".sc");
 	}*/
-
-
-
-

@@ -3,6 +3,7 @@ ClioFactory {
 
 	var <>makeType;
 	var <>args;
+	var <>nonPairArgs;
 
 	*new { arg ...args;
 		^super.new.initMe(*args);
@@ -11,6 +12,7 @@ ClioFactory {
 	initMe { arg makeType ...args;
 		this.makeType = makeType;
 		this.args = args;
+		this.nonPairArgs = []; // TO DO: NOT ELEGANT
 	}
 
 	makeKwargs { arg ...args;
@@ -20,7 +22,8 @@ ClioFactory {
 	}
 
 	make { arg ...args;
-		^this.makeType.new(*this.makeKwargs(*args).asPairs);
+		var madeNonPairArgs = this.nonPairArgs.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
+		^this.makeType.new( *(madeNonPairArgs ++ this.makeKwargs(*args).asPairs) );
 	}
 
 	// performs a deep copy and replaces pairwise args
@@ -34,5 +37,4 @@ ClioFactory {
 
 
 }
-
 

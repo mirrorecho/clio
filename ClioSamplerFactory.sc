@@ -19,6 +19,8 @@ ClioSamplerFactory : ClioSynthDefFactory {
 			freq + ((nextFreq - freq) / 2);
 		};
 
+		"YOMAMA".postln;
+
 
 		kwargs[\getSample] = {arg freq;
 			var whichSample = 0;

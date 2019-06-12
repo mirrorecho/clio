@@ -2,8 +2,8 @@
 ClioP : ClioFactory {
 
 	// TO DO MAYBE: move to ClioFactory for general use?
-	play { arg tempoClock;
-		^this.make.play(clock:tempoClock);
+	play { arg clock;
+		^this.make.play(clock:clock);
 	}
 
 }

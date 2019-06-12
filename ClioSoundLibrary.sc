@@ -22,6 +22,13 @@ ClioSoundLibrary : ClioLibrary {
 
 	}
 
+	bufArray { arg ...args;
+		^args.collect { arg key;
+			this.atKey(key).buffer;
+		};
+	}
+
+
 /*	toBufferLibrary { arg keyPath, bufferLibrary;
 		bufferLibrary = bufferLibrary ?? ClioBufferLibrary.new;
 

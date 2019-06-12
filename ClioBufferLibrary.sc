@@ -1,4 +1,7 @@
 
+
+// TO DO... depreciate????
+
 ClioBufferLibrary : ClioLibrary {
 
 	makeBuffer { arg key, length, channels;
