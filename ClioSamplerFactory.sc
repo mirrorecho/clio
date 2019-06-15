@@ -1,12 +1,12 @@
 
 ClioSamplerFactory : ClioSynthDefFactory {
 
-	makeKwargs { arg ...args;
-		var kwargs = super.makeKwargs(*args);
+	kwargs { arg ...args;
+		var myKwargs = super.kwargs(*args);
 
-		var buffersAndFreqs = kwargs[\keysAndFreqs].collect { arg keyAndFreq, i;
+		var buffersAndFreqs = myKwargs[\keysAndFreqs].collect { arg keyAndFreq, i;
 			[
-				kwargs[\soundLibrary].atKey(keyAndFreq[0]).buffer, // the buffer
+				myKwargs[\soundLibrary].atKey(keyAndFreq[0]).buffer, // the buffer
 				keyAndFreq[1], // the frequency of the sound for this buffer
 			];
 		};
@@ -19,10 +19,8 @@ ClioSamplerFactory : ClioSynthDefFactory {
 			freq + ((nextFreq - freq) / 2);
 		};
 
-		"YOMAMA".postln;
 
-
-		kwargs[\getSample] = {arg freq;
+		myKwargs[\getSample] = {arg freq;
 			var whichSample = 0;
 
 			cutoverFreqs[..cutoverFreqs.size-2].do {|cutoverFreq, i|
@@ -33,7 +31,7 @@ ClioSamplerFactory : ClioSynthDefFactory {
 			Select.kr(whichSample, buffersAndFreqs);
 		};
 
-		^kwargs;
+		^myKwargs;
 
 	}
 

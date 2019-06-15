@@ -17,31 +17,6 @@ ClioBufferLibrary : ClioLibrary {
 }
 
 
-// TO DO move these to standard synths....
-// SynthDef(
-// 	"bufPlay", {arg bufnum, amp=1.0, rate=1.0, start=0, out=~ss.bus.master;
-// 		var sig = PlayBuf.ar(2,
-// 			bufnum:bufnum,
-// 			rate:BufRateScale.kr(bufnum)*rate,
-// 			startPos:BufSampleRate.kr(bufnum) * start,
-// 			doneAction:2,
-// 		);
-// 		sig = sig * amp;
-// 		Out.ar(out, sig);
-// }).add;
-//
-// SynthDef("bufPerc", {
-// 	arg bufnum, amp=1.0, rate=1.0, start=0, attackTime=0.001, releaseTime=1, curve= -4, out=~ss.bus.master;
-// 	var sig = PlayBuf.ar(2,
-// 		bufnum:bufnum,
-// 		rate:BufRateScale.kr(bufnum)*rate,
-// 		startPos:BufSampleRate.kr(bufnum) * start,
-// 		doneAction:2,
-// 	);
-// 	var env = Env.perc(attackTime:attackTime, releaseTime:releaseTime, level:amp, curve:curve);
-// 	sig = sig * amp * EnvGen.ar(env, doneAction: 2);
-// 	Out.ar(out, sig);
-// }).add;
 //
 //
 // // NOTE: this implementation based delays causes amp to increase slightly after synth starts...
@@ -97,22 +72,3 @@ ClioBufferLibrary : ClioLibrary {
 //
 // },
 //
-//
-// playBuf: { arg self, libraryName, bufferName, args=[];
-// 	var bufnum = self[libraryName.asSymbol][bufferName.asSymbol];
-// 	~ss.synther.makeSynth("bufPlay", "bufPlay", [bufnum:bufnum]++args);
-// },
-//
-// drone: { arg self, libraryName, bufferName, args=[];
-// 	var bufnum = self[libraryName.asSymbol][bufferName.asSymbol];
-// 	~ss.synther.makeSynth("bufDrone", "bufDrone", [bufnum:bufnum]++args);
-// },
-//
-// perc: { arg self, libraryName, bufferName, args=[];
-// 	var bufnum = self[libraryName.asSymbol][bufferName.asSymbol];
-// 	~ss.synther.makeSynth("bufPerc", "bufPerc", [bufnum:bufnum]++args);
-// },
-//
-//
-
-

@@ -9,7 +9,7 @@ ClioSynthDefFactory : ClioFactory {
 	}
 
 	make { arg name ...args; // warning these cannot contain factories, should they?
-		^this.defineFunction.value(name, this.makeKwargs(*args));
+		^this.defineFunction.value(name, this.kwargs(*args));
 	}
 
 	// TO DO: better handle nil name

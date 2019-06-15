@@ -1,130 +1,16 @@
 
-ClioPatternFactory : ClioFactory {
-
-	// TO DO MAYBE: move to ClioFactory for general use?
-	play { arg clock;
-		^this.make.play(clock:clock);
-	}
-
-	asStream {
-		^this.make.asStream;
-	}
-
-	embedInStream {
-		^this.make.embedInStream;
-	}
-
-}
-// -------------------------------------------------
-
-// TO DO: simpler default of makeType without having to override initMe and call super every time
-
-ClioPbind : ClioPatternFactory {
-
-	initMe { arg ...args;
-		super.initMe(Pbind, *args);
-	}
-
-	patternpairs {
-		^this.make.patternpairs
-	}
-
-}
-
-// for some odd reason, Rest() gets screwy within patterns... so creating this alternative
-ClioPrest : ClioPbind {
-	initMe { arg dur;
-		super.initMe(*[note:Pn(\rest, 1), dur:dur]);
-	}
-
-}
-
-// -------------------------------------------------
-// TO DO, this Base is not so elegant:
-
-ClioPmonoBase : ClioPatternFactory {
-	var <>instrument;
+ClioL : ClioFactory {
 
 	make { arg ...args;
-		^this.makeType.new(this.instrument, *this.kwargs(*args).asPairs );
+		var myArgs = args ++ this.args;
+		^myArgs.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
 	}
-}
-
-
-ClioPmono : ClioPmonoBase {
-
-	initMe { arg instrument ...args;
-		this.instrument = instrument;
-		super.initMe(Pmono, *args);
-	}
-
-}
-
-ClioPmonoArtic : ClioPmonoBase {
-
-	initMe { arg instrument ...args;
-		this.instrument = instrument;
-		super.initMe(PmonoArtic, *args);
-	}
-
-}
-
-// -------------------------------------------------
-// TO DO, this Base is not so elegant:
-
-ClioPseqBase  : ClioPatternFactory {
-
-	make {
-		var madeList = this.args[0].collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
-		^this.makeType.new(madeList, *this.args[1..]);
-	}
-
-}
-
-ClioPseq : ClioPseqBase {
 
 	initMe { arg ...args;
-		super.initMe(Pseq, *args);
+		this.args = args;
 	}
 
 }
-
-ClioPpar : ClioPseqBase {
-
-	initMe { arg ...args;
-		super.initMe(Ppar, *args);
-	}
-
-
-}
-
-// -------------------------------------------------
-
-ClioPfadeBase : ClioPatternFactory {
-
-	make {
-		var myP = this.args[0];
-		var madePattern = if (myP.isKindOf(ClioFactory), {myP.make}, {myP});
-		^this.makeType.new(madePattern, *this.args[1..]);
-	}
-}
-
-ClioPfadeIn : ClioPfadeBase {
-
-	initMe { arg ...args;
-		super.initMe(PfadeIn, *args);
-	}
-
-}
-
-ClioPfadeOut : ClioPfadeBase {
-
-	initMe { arg ...args;
-		super.initMe(PfadeOut, *args);
-	}
-
-}
-
 
 
 // create factory classes for standard pattern classes? (ClioPbind, Pmono, Pseq, etc.?)
