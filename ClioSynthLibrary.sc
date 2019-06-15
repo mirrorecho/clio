@@ -1,5 +1,5 @@
 
-// TO DO MAYBE: is this a factory?
+// TO DO MAYBE: is this a factory? combine with SynthDefLibrary?
 ClioSynthLibrary : ClioLibrary {
 
 	makeSynth { arg key, synthDefName, args=[];
@@ -19,3 +19,5 @@ ClioSynthLibrary : ClioLibrary {
 
 
 }
+
+
