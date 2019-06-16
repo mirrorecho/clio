@@ -4,7 +4,9 @@ ClioLibrary : Library {
 	var <>catalogPaths;
 
 	*new { arg ...paths;
-		^super.new.go(*paths);
+		var myLibrary = super.new;
+		myLibrary.initMe;
+		^myLibrary.go(*paths);
 	}
 
 	*catalog { arg catalogFunction, isMainFunction={}, isNotMainFunction={};
@@ -18,19 +20,26 @@ ClioLibrary : Library {
 		^catalogEnvir;
 	}
 
+	initMe {
+		// just a hook for any init stuff
+	}
+
 	go { arg ...paths;
 		this.catalogPaths = this.catalogPaths ++ paths;
 		this.catalogPaths.do { arg catalogPath; this.putFromCatalog([], catalogPath); }
 	}
 
+	// TO DO... is this really needed????
 	putKey { arg key, item; // key can be either a symbol or an array of symbols
 		^this.put(*(key.asArray ++ [item]));
 	}
 
+	// TO DO... is this really needed????
 	atKey { arg key; // key can be either a symbol or an array of symbols
 		^this.at(*(key.asArray));
-	}
 
+	}
+	// TO DO... is this really needed????
 	removeAtKey { arg key; // key can be either a symbol or an array of symbols
 		^this.removeAt(*(key.asArray));
 	}

@@ -1,7 +1,7 @@
 
 // TO DO: make this NOT a library
 ClioProject {
-	var <>name, <>path, <>docs, <>synthDefs, <>synths, <>busses, <>sounds, <>samplers, <>patterns, <>tempo;
+	var <>name, <>path, <>docs, <>synthDefs, <>synths, <>busses, <>sounds, <>samplers, <>midi, <>patterns, <>tempo;
 
 
 	*new { arg name, path;
@@ -17,6 +17,7 @@ ClioProject {
 		this.busses = ClioBusLibrary.new;
 		this.sounds = ClioSoundLibrary.new;
 		this.samplers = ClioLibrary.new;
+		this.midi = ClioMIDILibrary.new; // TO DO: consider whether this should be project speicifc, or universal to CLio
 		this.patterns = ClioPatternLibrary.new;
 	}
 

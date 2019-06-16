@@ -16,7 +16,7 @@ ClioSamplerFactory : ClioSynthDefFactory {
 			freq = bufferAndFreq[1],
 			nextFreq = buffersAndFreqs[i+1][1];
 
-			freq + ((nextFreq - freq) / 2);
+			freq * ((nextFreq/freq)**0.5);
 		};
 
 
@@ -24,9 +24,12 @@ ClioSamplerFactory : ClioSynthDefFactory {
 			var whichSample = 0;
 
 			cutoverFreqs[..cutoverFreqs.size-2].do {|cutoverFreq, i|
-				whichSample = whichSample + (i * (freq >= cutoverFreq) * (freq < cutoverFreqs[i+1]));
+				whichSample = whichSample + ((i+1) * (freq >= cutoverFreq) * (freq < cutoverFreqs[i+1]));
 			};
-			whichSample = whichSample + ((cutoverFreqs.size-1) * (freq >= cutoverFreqs[cutoverFreqs.size-1]));
+
+			if (cutoverFreqs.size > 0,
+				{ whichSample = whichSample + ((cutoverFreqs.size) * (freq >= cutoverFreqs[cutoverFreqs.size-1]));}
+			);
 
 			Select.kr(whichSample, buffersAndFreqs);
 		};
@@ -37,3 +40,4 @@ ClioSamplerFactory : ClioSynthDefFactory {
 
 
 }
+
