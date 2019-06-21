@@ -1,4 +1,0 @@
-
-ClioSynthDefLibrary : ClioLibrary {
-
-}

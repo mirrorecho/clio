@@ -2,13 +2,13 @@
 ClioBusLibrary : ClioLibrary {
 
 	makeBus { arg key, channels = 2, msgBusType = \audio;
-		var myBus = this.atKey(key);
+		var myBus = this.at(*key);
 
 		if (myBus != nil, { myBus.free; });
 
 		myBus = Message(Bus, msgBusType, [Clio.server, channels]).value;
 
-		this.putKey(key, myBus);
+		this.put(*(key.asArray ++ myBus));
 
 		^myBus;
 	}

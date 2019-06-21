@@ -9,10 +9,10 @@ ClioSoundLibrary : ClioLibrary {
 		this.soundPaths.do { arg folderString; this.addFolder(folderString); }
 	}
 
-	addFolder { arg folderString, key=[];
+	addFolder { arg folderString, key;
 
 		ClioSound.collect(folderString).do { arg mySound;
-			this.putKey(key ++ [mySound.name], mySound);
+			this.put(*(key.asArray ++ mySound.name ++ mySound));
 		};
 
 		// recursively add subfolders:
@@ -24,9 +24,10 @@ ClioSoundLibrary : ClioLibrary {
 
 	bufArray { arg ...args;
 		^args.collect { arg key;
-			this.atKey(key).buffer;
+			this.at(*(key.asArray)).buffer;
 		};
 	}
+
 
 
 /*	toBufferLibrary { arg keyPath, bufferLibrary;

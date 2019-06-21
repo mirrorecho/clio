@@ -2,8 +2,46 @@
 // TO DO MAYBE: is this a factory? combine with SynthDefLibrary?
 ClioSynthLibrary : ClioLibrary {
 
+	// makes a ClioSynthDefFactory with function arguments, and adds to library
+	makeFactory { arg key, gen, process, out, args=[];
+
+		var genFunc = this.at(*([\func, \gen] ++ gen));
+
+		var processFuncs = process.collect { var myProcessKey;
+			this.at(*([\func, \process] ++ myProcessKey));
+		};
+
+		var outFunc = this.at(*([\func, \out] ++ out));
+
+		var mySynthDefFactory = ClioSynthDefFactory(genFunc, processFuncs, outFunc, *args);
+
+		this.put(*([\factory] ++ key ++ mySynthDefFactory));
+
+		^mySynthDefFactory;
+	}
+
+	makeDefFromFactory {arg factoryKey, synthDefName, args=[];
+		var myFactory = this.at(*([\factory] ++ factoryKey));
+
+		var myDef = myFactory.make(synthDefName, *args);
+
+		this.put(*([\def] ++ synthDefName ++ myDef));
+
+		^myDef;
+	}
+
+
+	// a shortcut to make a both factory and def, with the same sub-key
+	makeDef {arg key, gen, process, out, args=[];
+
+		var myFactory = this.makeFactory(key, gen, process, out, args);
+
+		^this.makeDefFromFactory(key, key);
+	}
+
+
 	makeSynth { arg key, synthDefName, args=[];
-		var mySynth = this.atKey(key);
+		var mySynth = this.at(*([\synth] ++ synthDefName));
 
 		if (mySynth != nil, { mySynth.free; });
 
@@ -11,13 +49,11 @@ ClioSynthLibrary : ClioLibrary {
 
 		mySynth = Synth(synthDefName, args);
 
-		this.putKey(key, mySynth);
+		this.put(*(key.asArray ++ mySynth));
 
 		^mySynth;
-
 	}
 
 
 }
-
 
