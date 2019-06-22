@@ -9,15 +9,16 @@ ClioLibrary : Library {
 		^myLibrary.go(*paths);
 	}
 
-	*catalog { arg catalogFunction, isMainFunction={}, isNotMainFunction={};
-		var catalogEnvir = Environment.make;
+	*catalog { arg key, catalogFunction, isMainFunction={}, isNotMainFunction={};
+		var catalogEnvir = Environment.make, myCatalog;
 		catalogEnvir.use {catalogFunction.value};
+		myCatalog = [key, catalogEnvir];
 
 		if (currentEnvironment === topEnvironment,
-			{ isMainFunction.value(catalogEnvir) },
-			{ isNotMainFunction.value(catalogEnvir) }
+			{ isMainFunction.value(*myCatalog) },
+			{ isNotMainFunction.value(*myCatalog) }
 		);
-		^catalogEnvir;
+		^myCatalog;
 	}
 
 	initMe {
@@ -48,10 +49,12 @@ ClioLibrary : Library {
 		};
 	}
 
-	putFromCatalog { arg key, catalogPath;
-		var loadingEnvir = Environment.make, catalogEnvir;
-		catalogEnvir = loadingEnvir.use {catalogPath.load};
-		this.putFromEnvironment(key, catalogEnvir);
+
+	// TO DO: consider only loading some envir variables
+	putFromCatalog { arg catalogPath;
+		var loadingEnvir = Environment.make, myCatalog;
+		myCatalog = loadingEnvir.use {catalogPath.load};
+		this.putFromEnvironment(*myCatalog);
 	}
 
 	// TO MAYBE: put factories?

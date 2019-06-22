@@ -7,24 +7,24 @@ ClioSynthDefFactory : ClioFactory {
 	}
 
 
-	initMe { arg
-		genFunc = {arg kwargs; SinOsc.ar(kwargs[\freq]);},
-		processFuncs,
-		outFunc = {arg kwargs; Out.ar(kwargs[\out], kwargs[\sig]);}
-		...args;
+	initMe { arg genFunc, processFuncs, outFunc ...args;
 
 		this.defFunc = { arg name, self, kwargs;
-			SynthDef(name, { arg freq=440, amp=0.6, gate=1, out=Clio.busses[\master];
-				kwargs[\freq]=freq;
-				kwargs[\amp]=amp;
-				kwargs[\gate]=gate;
-				kwargs[\out]=out;
+			SynthDef(name, { arg gate=1;
+
+				kwargs[\freq] = \freq.kr( kwargs[\freq] ? 440 );
+				kwargs[\amp] = \amp.kr( kwargs[\amp] ? 0.6 );
+				kwargs[\out] = \out.ir(kwargs[\out] ? Clio.busses[\master] );
+
+				kwargs[\gate] = gate;
+
 				self.wrapFunc.value(kwargs);
-			}, rates:kwargs[\rates], prepandArgs:nil, variants:kwargs[\variants], metadata:nil);
+
+			}, rates:kwargs[\rates], prependArgs:nil, variants:kwargs[\variants], metadata:nil);
 		};
 
 		this.wrapFunc = { arg kwargs;
-			kwargs[\sig]=SynthDef.wrap(this.genFunc, nil, [kwargs]);
+			SynthDef.wrap(this.genFunc, nil, [kwargs]);
 			this.processFuncs.do { arg processFunc;
 				SynthDef.wrap(processFunc, nil, [kwargs]);
 			};
@@ -58,7 +58,6 @@ ClioSynthDefFactory : ClioFactory {
 }
 
 
-
 //
 // ClioSynthDefFactory : ClioFactory {
 // 	var <>defineFunction;
@@ -86,7 +85,6 @@ ClioSynthDefFactory : ClioFactory {
 // }
 //
 //
-
 
 
 
