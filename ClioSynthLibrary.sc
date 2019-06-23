@@ -3,23 +3,20 @@
 ClioSynthLibrary : ClioLibrary {
 
 	initMe {
-		this.put(\func, \gen, \default, {arg kwargs; kwargs[\sig] = SinOsc.ar(kwargs[\freq])!2;});
 		this.put(\func, \out, \default, {arg kwargs; Out.ar(kwargs[\out], kwargs[\sig]);});
 	}
 
 
 	// makes a ClioSynthDefFactory with function arguments, and adds to library
-	makeFactory { arg key, gen=\default, process, out=\default, args=[];
+	makeFactory { arg key, sig, out=\default, args=[];
 
-		var genFunc = this.at(*([\func, \gen] ++ gen));
-
-		var processFuncs = process.collect { arg myProcessKey;
-			this.at(*([\func, \process] ++ myProcessKey));
+		var sigFuncs = sig.collect { arg sigKey;
+			this.at(*([\func, \sig] ++ sigKey));
 		};
 
 		var outFunc = this.at(*([\func, \out] ++ out));
 
-		var mySynthDefFactory = ClioSynthDefFactory(genFunc, processFuncs, outFunc, *args);
+		var mySynthDefFactory = ClioSynthDefFactory(sigFuncs, outFunc, *args);
 
 		this.put(*([\factory] ++ key ++ mySynthDefFactory));
 
@@ -38,9 +35,9 @@ ClioSynthLibrary : ClioLibrary {
 
 
 	// a shortcut to make a both factory and def, with the same sub-key
-	makeDef {arg key, gen=\default, process, out=\default, args=[];
+	makeDef {arg key, sig, out=\default, args=[];
 
-		var myFactory = this.makeFactory(key, gen, process, out, args);
+		var myFactory = this.makeFactory(key, sig, out, args);
 
 		^this.makeDefFromFactory(key, key);
 	}

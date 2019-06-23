@@ -1,13 +1,13 @@
 
 ClioSynthDefFactory : ClioFactory {
-	var <>defFunc, <>wrapFunc, <>genFunc, <>processFuncs, <>outFunc;
+	var <>defFunc, <>wrapFunc, <>sigFuncs, <>outFunc;
 
-	*new { arg genFunc, processFuncs=[], outFunc ...args;
-		^super.new.initMe(genFunc, processFuncs, outFunc, *args);
+	*new { arg sigFuncs=[], outFunc ...args;
+		^super.new.initMe(sigFuncs, outFunc, *args);
 	}
 
 
-	initMe { arg genFunc, processFuncs, outFunc ...args;
+	initMe { arg sigFuncs, outFunc ...args;
 
 		this.defFunc = { arg name, self, kwargs;
 			SynthDef(name, { arg gate=1;
@@ -24,19 +24,17 @@ ClioSynthDefFactory : ClioFactory {
 		};
 
 		this.wrapFunc = { arg kwargs;
-			SynthDef.wrap(this.genFunc, nil, [kwargs]);
-			this.processFuncs.do { arg processFunc;
-				SynthDef.wrap(processFunc, nil, [kwargs]);
+			kwargs[\sig]=0;
+			this.sigFuncs.do { arg sigFunc;
+				SynthDef.wrap(sigFunc, nil, [kwargs]);
 			};
 			SynthDef.wrap(this.outFunc, nil, [kwargs]);
 		};
 
-		this.genFunc = genFunc;
-		this.processFuncs = processFuncs;
+		this.sigFuncs = sigFuncs;
 		this.outFunc = outFunc;
 
 		this.makeType = SynthDef;
-		// this.defineFunction = args.pop;
 		this.args = args;
 	}
 
