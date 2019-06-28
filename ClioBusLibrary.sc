@@ -1,12 +1,12 @@
 
 ClioBusLibrary : ClioLibrary {
 
-	makeBus { arg key, channels = 2, msgBusType = \audio;
+	makeBus { arg key, numChannels = 2, msgBusType = \audio;
 		var myBus = this.at(*key);
 
 		if (myBus != nil, { myBus.free; });
 
-		myBus = Message(Bus, msgBusType, [Clio.server, channels]).value;
+		myBus = Message(Bus, msgBusType, [Clio.server, numChannels]).value;
 
 		this.put(*(key.asArray ++ myBus));
 
@@ -14,8 +14,8 @@ ClioBusLibrary : ClioLibrary {
 	}
 
 
-	makeControlBus { arg name, channels = 1;
-		^this.makeBus(name, channels, \control);
+	makeControlBus { arg name, numChannels = 1;
+		^this.makeBus(name, numChannels, \control);
 	}
 
 

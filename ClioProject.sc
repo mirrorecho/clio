@@ -1,7 +1,7 @@
 
 // TO DO: make this NOT a library
 ClioProject {
-	var <>name, <>path, <>synths, <>busses, <>sounds, <>samplers, <>midi, <>patterns, <>tempo;
+	var <>name, <>path, <>synths, <>busses, <>sounds, <>midi, <>patterns, <>tempo;
 
 
 	*new { arg name, path;
@@ -16,8 +16,7 @@ ClioProject {
 		this.synths = ClioSynthLibrary.new;
 		this.busses = ClioBusLibrary.new;
 		this.sounds = ClioSoundLibrary.new;
-		this.samplers = ClioLibrary.new;
-		this.midi = ClioMIDILibrary.new; // TO DO: consider whether this should be project speicifc, or universal to CLio
+		this.midi = ClioMIDILibrary.new; // TO DO: consider whether this should really be project speicifc, or universal to CLio
 		this.patterns = ClioPatternLibrary.new;
 	}
 
@@ -28,24 +27,22 @@ ClioProject {
 
 
 	// this lives at the project level because it needs a new bus, a synthdef, and a synth
-	makeFx { arg name, synthFactoryName, args=[], channels=2, callback; // NOTE: to keep things simple the same args are passed to SynthDef as to Synth
+	makeFx { arg name, synthFactoryName, args=[], numChannels=2, callback; // NOTE: to keep things simple the same args are passed to SynthDef as to Synth
 
 		synthFactoryName = synthFactoryName ?? name;
 
 		{
-			var fxBus = this.busses.makeBus([\fx, name], channels); // creates a new audio bus
+			var fxBus = this.busses.makeBus([\fx, synthFactoryName], numChannels); // creates a new audio bus
 
-			args = args ++ [\fxBus: fxBus];
-
-			Clio.server.sync;
-
-
-			this.synthDefs[\fx, synthFactoryName].make(name, *args).add;
+			args = args ++ [fxBus:fxBus];
 
 			Clio.server.sync;
 
+			this.synths.makeDef(synthFactoryName, args, [\fx, name]).add;
 
-			this.synths.makeSynth([\fx, name], name, args);
+			Clio.server.sync;
+
+			this.synths.makeSynth([\func, \fx, synthFactoryName], synthFactoryName, args);
 
 			Clio.server.sync;
 

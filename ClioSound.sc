@@ -53,7 +53,7 @@ ClioSound {
 	//
 	// loads mySoundFile into buffer
 	load {
-		this.path.postln;
+		// this.path.postln;
 		if (myBuffer != nil, { myBuffer.free; });
 		myBuffer = SoundFile.collectIntoBuffers(this.path)[0];
 		^myBuffer;
