@@ -1,46 +1,43 @@
 
 ClioSynthDefFactory : ClioFactory {
-	var <>defFunc, <>wrapFunc, <>sigFuncs, <>outFunc;
-
-	*new { arg args=[] ...sigFuncs;
-		^super.new.initMe(args, *sigFuncs);
-	}
+	var <>defFunc, <>wrapFunc, <>outFunc;
 
 
-	initMe { arg args ...sigFuncs;
+	initMe { arg ...args;
+
+		super.initMe(SynthDef, *args);
 
 		// could be reset to add other universal kwargs, triggers, etc.
-		this.defFunc = { arg name, self, kwargs;
+		this.defFunc = { arg name, self, synthKwargs;
 			SynthDef(name, { arg gate=1;
 
-				kwargs[\freq] = \freq.kr( kwargs[\freq] ? 440 );
-				kwargs[\amp] = \amp.kr( kwargs[\amp] ? 0.6 );
-				kwargs[\out] = \out.ir(kwargs[\out] ? Clio.busses[\master] );
+				synthKwargs[\freq] = \freq.kr( synthKwargs[\freq] ? 440 );
+				synthKwargs[\amp] = \amp.kr( synthKwargs[\amp] ? 0.6 );
+				synthKwargs[\out] = \out.ir(synthKwargs[\out] ? Clio.busses[\master] );
 
-				kwargs[\gate] = gate;
+				synthKwargs[\gate] = gate;
 
-				self.wrapFunc.value(kwargs);
+				self.wrapFunc.(synthKwargs);
 
-			}, rates:kwargs[\rates], prependArgs:nil, variants:kwargs[\variants], metadata:nil);
+			}, rates:synthKwargs[\rates], prependArgs:nil, variants:synthKwargs[\variants], metadata:nil);
 		};
 
-		this.wrapFunc = { arg kwargs;
-			kwargs[\sig]=0;
-			this.sigFuncs.do { arg sigFunc;
-				SynthDef.wrap(sigFunc, nil, [kwargs]);
+		this.wrapFunc = { arg synthKwargs;
+			synthKwargs[\sig]=0;
+			this.args.pairsDo { arg sigFunc, args;
+				var kwargs = args.asDict;
+				SynthDef.wrap(sigFunc, nil, [synthKwargs, kwargs]);
 			};
-			SynthDef.wrap(this.outFunc, nil, [kwargs]);
+			SynthDef.wrap(this.outFunc, nil, [synthKwargs]);
 		};
 
-		this.sigFuncs = sigFuncs;
-		this.outFunc = {arg kwargs; Out.ar(kwargs[\out], kwargs[\sig]);}; // could be reset to do fancy things with output
-		this.makeType = SynthDef; // not really used, but setting for consistency sake alongside other factories
-		this.args = args;
+		// could be reset to do fancy things with output:
+		this.outFunc = {arg synthKwargs; Out.ar(synthKwargs[\out], synthKwargs[\sig]);};
 	}
 
 	make { arg name, args;
-		var kwargs = this.kwargs(*args);
-		^this.defFunc.value(name, this, kwargs);
+		var synthKwargs = this.kwargs(*args);
+		^this.defFunc.(name, this, synthKwargs);
 	}
 
 	// TO DO: better handle nil name
@@ -56,3 +53,21 @@ ClioSynthDefFactory : ClioFactory {
 }
 
 
+// ClioSynthHelper {
+// 	var <>function; // these should be pairs
+// 	var <>synthKwargs;
+// 	var <>kwargs;
+//
+// 	*new { arg function;
+// 		myHeloper = ^super.new;
+// 		myHelper.function = function;
+// 		myHelper.
+// 		^myHelper;
+// 	};
+//
+// 	make {
+// 		^this.function.
+// 	};
+//
+// }
+//

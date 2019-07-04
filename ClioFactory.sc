@@ -15,8 +15,8 @@ ClioFactory {
 
 	// TO DO: distinguish kwargs from madeKwargs
 	kwargs { arg ...args;
-		var madeThisArgs = this.args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
-		var madeNewArgs = args.collect {|a| if (a.isKindOf(ClioFactory), {a.make}, {a})};
+		var madeThisArgs = this.args.collect {|a| if (a.respondsTo(\make), {a.make}, {a})};
+		var madeNewArgs = args.collect {|a| if (a.respondsTo(\make), {a.make}, {a})};
 		^(madeThisArgs.asDict ++ madeNewArgs.asDict);
 	}
 
@@ -35,4 +35,3 @@ ClioFactory {
 
 
 }
-
