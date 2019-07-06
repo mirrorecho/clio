@@ -6,10 +6,13 @@ ClioSynthDefFactory : ClioFactory {
 	initMe { arg ...args;
 
 		super.initMe(SynthDef, *args);
+		this.universalKeys = [\synth];
 
 		// could be reset to add other universal kwargs, triggers, etc.
 		this.defFunc = { arg name, self, synthKwargs;
 			SynthDef(name, { arg gate=1;
+
+				synthKwargs[\sig]=0;
 
 				synthKwargs[\freq] = \freq.kr( synthKwargs[\freq] ? 440 );
 				synthKwargs[\amp] = \amp.kr( synthKwargs[\amp] ? 0.6 );
@@ -23,10 +26,9 @@ ClioSynthDefFactory : ClioFactory {
 		};
 
 		this.wrapFunc = { arg synthKwargs;
-			synthKwargs[\sig]=0;
-			this.args.pairsDo { arg sigFunc, args;
-				var kwargs = args.asDict;
-				SynthDef.wrap(sigFunc, nil, [synthKwargs, kwargs]);
+			this.args.pairsDo { arg funcFactory, args;
+				args = args ++ [synth:synthKwargs];
+				funcFactory.wrap(args);
 			};
 			SynthDef.wrap(this.outFunc, nil, [synthKwargs]);
 		};
@@ -35,9 +37,9 @@ ClioSynthDefFactory : ClioFactory {
 		this.outFunc = {arg synthKwargs; Out.ar(synthKwargs[\out], synthKwargs[\sig]);};
 	}
 
-	make { arg name, args;
-		var synthKwargs = this.kwargs(*args);
-		^this.defFunc.(name, this, synthKwargs);
+	// TO DO MAYBE: should this make signature be the same as other factories??? i.s. make { arg ... args;
+	make { arg name, args=[];
+		^this.defFunc.(name, this, args.asDict);
 	}
 
 	// TO DO: better handle nil name
@@ -52,22 +54,3 @@ ClioSynthDefFactory : ClioFactory {
 
 }
 
-
-// ClioSynthHelper {
-// 	var <>function; // these should be pairs
-// 	var <>synthKwargs;
-// 	var <>kwargs;
-//
-// 	*new { arg function;
-// 		myHeloper = ^super.new;
-// 		myHelper.function = function;
-// 		myHelper.
-// 		^myHelper;
-// 	};
-//
-// 	make {
-// 		^this.function.
-// 	};
-//
-// }
-//

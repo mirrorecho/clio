@@ -34,11 +34,12 @@ ClioProject {
 		{
 			var fxBus = this.busses.makeBus([\fx, synthFactoryName], numChannels); // creates a new audio bus
 
-			args = args ++ [fxBus:fxBus];
-
 			Clio.server.sync;
 
-			this.synths.makeDef(synthFactoryName, args, [\fx, name]).add;
+			this.synths.makeDef(synthFactoryName, [
+				[\fx, \busIn]:[numChannels:numChannels, bus:fxBus],
+				[\fx, name]:args,
+			]).add;
 
 			Clio.server.sync;
 

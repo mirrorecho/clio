@@ -3,6 +3,7 @@ ClioFactory {
 
 	var <>makeType;
 	var <>args; // these should be pairs
+	var <>universalKeys; // these will be added to all
 
 	*new { arg ...args;
 		^super.new.initMe(*args);
@@ -11,16 +12,20 @@ ClioFactory {
 	initMe { arg makeType ...args;
 		this.makeType = makeType;
 		this.args = args;
+		this.universalKeys = [];
 	}
 
-	// TO DO: distinguish kwargs from madeKwargs
 	kwargs { arg ...args;
-		var madeThisArgs = this.args.collect {|a| if (a.respondsTo(\make), {a.make}, {a})};
-		var madeNewArgs = args.collect {|a| if (a.respondsTo(\make), {a.make}, {a})};
-		^(madeThisArgs.asDict ++ madeNewArgs.asDict);
+		var myKwargs = this.args.asDict ++ args.asDict;
+		var universalArgs = myKwargs.getPairs(this.universalKeys);
+
+		^myKwargs.collect {|a| if (a.respondsTo(\make), {a.make(*universalArgs)}, {a})};
+
 	}
 
 	make { arg ...args;
+		args.postln;
+		"----------------------------------".postln;
 		^this.makeType.new( *this.kwargs(*args).asPairs );
 	}
 
@@ -31,7 +36,13 @@ ClioFactory {
 		^myCopy;
 	}
 
+	postKwargs { arg ...args;
+		this.kwargs(*args).pairsDo { arg n,v; (n.asString ++ ": " ++ v.asString).postln; };
+	}
+
 	// TO DO... remove arg pair
 
 
 }
+
+
