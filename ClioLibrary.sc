@@ -57,6 +57,7 @@ ClioLibrary : Library {
 		this.putFromEnvironment(*myCatalog);
 	}
 
+
 	// TO MAYBE: put factories?
 
 }

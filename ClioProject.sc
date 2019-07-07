@@ -21,8 +21,8 @@ ClioProject {
 	}
 
 	// TO DO: implement ability to only copy certain keys
-	addLocalCatalog{ arg librarySymbol, catalogName, key=[];
-		^Message(this, librarySymbol).value.putFromCatalog(key, this.path ++ catalogName.asString ++ ".sc");
+	addLocalCatalog{ arg librarySymbol, catalogName;
+		^Message(this, librarySymbol).value.putFromCatalog(this.path ++ catalogName.asString ++ ".sc");
 	}
 
 
