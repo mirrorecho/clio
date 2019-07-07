@@ -27,23 +27,20 @@ ClioProject {
 
 
 	// this lives at the project level because it needs a new bus, a synthdef, and a synth
-	makeFx { arg name, synthFactoryName, args=[], numChannels=2, callback; // NOTE: to keep things simple the same args are passed to SynthDef as to Synth
-
-		synthFactoryName = synthFactoryName ?? name;
+	makeFx { arg name, args=[], numChannels=2, callback;
 
 		{
-			var fxBus = this.busses.makeBus([\fx, synthFactoryName], numChannels); // creates a new audio bus
+			var fxBus = this.busses.makeBus([\fx, name], numChannels); // creates a new audio bus
 
 			Clio.server.sync;
 
-			this.synths.makeDef(synthFactoryName, [
+			this.synths.makeDef(name, [
 				[\fx, \busIn]:[numChannels:numChannels, bus:fxBus],
-				[\fx, name]:args,
-			]).add;
+			] ++ args).add;
 
 			Clio.server.sync;
 
-			this.synths.makeSynth([\func, \fx, synthFactoryName], synthFactoryName, args);
+			this.synths.makeSynth([\fx, name]);
 
 			Clio.server.sync;
 

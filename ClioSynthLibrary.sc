@@ -40,7 +40,7 @@ ClioSynthLibrary : ClioLibrary {
 
 
 	makeSynth { arg key, synthDefName, args=[];
-		var mySynth = this.at(*([\synth] ++ synthDefName));
+		var mySynth = this.at(*([\synth] ++ key));
 
 		if (mySynth != nil, { mySynth.free; });
 
@@ -48,11 +48,12 @@ ClioSynthLibrary : ClioLibrary {
 
 		mySynth = Synth(synthDefName, args);
 
-		this.put(*(key.asArray ++ mySynth));
+		this.put(*([\synth] ++ key ++ mySynth));
 
 		^mySynth;
 	}
 
 
 }
+
 
