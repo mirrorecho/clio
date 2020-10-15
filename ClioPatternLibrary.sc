@@ -9,7 +9,6 @@ ClioPatternLibrary : ClioLibrary {
 }
 
 
-
 // TREE STRUCTURE
 // - for any given node, can get:
 // - - - a base function that returns a ClioPatternFactory
@@ -24,13 +23,14 @@ ClioBuildPatterns : ClioPatternLibrary {
 
 	initMe {
 		this.putFunc({arg self, kwargs;
-			// TO DO: use kwargs here ...
-			ClioCell.fromEvents((note:\rest, dur:1));
+			ClioCell.fromArgs(*kwargs.asPairs);
 		});
 		this.putModFunc({arg self, pattern, kwargs;
 			pattern;
 		});
-		this.putKwargs(IdentityDictionary());
+		this.putKwargs(IdentityDictionary(*[
+			streamKeys:[\note, \dur, \amp],
+		]));
 	}
 
 	putKwargs {arg kwargs ... args;
@@ -66,14 +66,8 @@ ClioBuildPatterns : ClioPatternLibrary {
 		var myFunc = this.getFunc;
 		var myKey = [];
 		args.do{|a|
-			// var myBranchFunc;
 			myKey = myKey++[a];
-			// TO DO... does this work? ...
 			myFunc = this.getFunc(*myKey) ?? {myFunc};
-/*			myBranchFunc = this.getFunc(*myKey);
-			if (not(myBranchFunc.isNil), {
-				myFunc = myBranchFunc;
-			});*/
 		};
 		^myFunc;
 	}

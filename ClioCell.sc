@@ -11,6 +11,21 @@ ClioCell : ClioPatternFactory {
 		^c;
 	}
 
+	*fromArgs { arg ...args;
+		var dict = args.asDict;
+		var streamKeys = dict[\streamKeys] ?? dict.keys;
+		var streamDict = dict.select({|v, k| streamKeys.includes(k) };);
+		// TO DO MAYBE: explicit pattenKeys
+		var patternDict = dict.reject({|v, k| (streamKeys++[\streamKeys, \streamSize]).includes(k) };);
+		var streamSize = dict[\streamSize] ?? streamDict.asArray[0].size;
+		var eventsArray = streamSize.collect{|i|
+			streamDict.collect{|stream|stream[i]}.asEvent;
+		};
+		var c = ClioCell.fromEvents(*eventsArray);
+		c.setKwargs(*patternDict.asPairs);
+		^c;
+	}
+
 	apply { arg func = {|c|};
 		func.value(this);
 	}
