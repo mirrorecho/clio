@@ -21,6 +21,10 @@ ClioFactory {
 		this.args = myKwargs.asPairs;
 	}
 
+	setKwargs { arg ... args;
+		this.args = (this.args.asDict ++ args.asDict).asPairs;
+	}
+
 	kwargs { arg ...args;
 		var myKwargs = this.args.asDict ++ args.asDict;
 		var universalArgs = myKwargs.getPairs(this.universalKeys);
@@ -37,7 +41,7 @@ ClioFactory {
 	// performs a deep copy and replaces pairwise args
 	mimic { arg ...args;
 		var myCopy = this.deepCopy;
-		myCopy.args = (this.args.asDict ++ args.asDict).asPairs;
+		myCopy.setKwargs(*args);
 		^myCopy;
 	}
 

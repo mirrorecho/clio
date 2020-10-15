@@ -6,9 +6,13 @@ ClioCell : ClioPatternFactory {
 	var <>events;
 
 	*fromEvents { arg ...args;
-		var cell = super.new(args[0].deepCopy);
-		cell.events = args;
-		^cell;
+		var c = super.new(args[0].deepCopy);
+		c.streamAppends(*args);
+		^c;
+	}
+
+	apply { arg func = {|c|};
+		func.value(this);
 	}
 
 		// TO DO: make this work for patterns other than Pbind (e.g. Pmono, PmonoArtic)
@@ -39,6 +43,10 @@ ClioCell : ClioPatternFactory {
 		this.events = this.events.insert(this.streamSize,this.modelEvent ++ event );
 	}
 
+	streamAppends{ arg ...events;
+		this.events = this.events ++ events.collect{|e|this.modelEvent ++ e};
+	}
+
 	streamExtend { arg count, event=();
 		this.events = this.events ++ ( (this.modelEvent++event)!count);
 	}
@@ -49,6 +57,10 @@ ClioCell : ClioPatternFactory {
 
 	convertIndices {arg indices;
 		^indices.collect{|i|this.convertIndex(i)};
+	}
+
+	get{arg index;
+		^this.events[this.convertIndex(index)];
 	}
 
 	cellPseqs {
