@@ -28,6 +28,7 @@ ClioCell : ClioPatternFactory {
 
 	apply { arg func = {|c|};
 		func.value(this);
+		^this;
 	}
 
 		// TO DO: make this work for patterns other than Pbind (e.g. Pmono, PmonoArtic)
@@ -266,6 +267,18 @@ ClioCell : ClioPatternFactory {
 		^c;
 	}
 
+	fadeIn {
+		var c = this.mimic;
+		c.amps = c.amps * (1..this.streamSize)/this.streamSize;
+		^c;
+	}
+
+	fadeOut {
+		var c = this.mimic;
+		c.amps = c.amps * (this.streamSize..1)/this.streamSize;
+		^c;
+	}
+
 	ghost { arg accentMul=1, offMul=0.5, ghostDur=1;
 		var c = this.mimic;
 		c.events = [];
@@ -317,4 +330,5 @@ ClioCell : ClioPatternFactory {
 
 
 }
+
 

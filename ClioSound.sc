@@ -2,8 +2,8 @@
 ClioSound {
 	var <>name,
 	<>path,
-	<length,
-/*	<numChannels,
+/*	<length,
+	<numChannels,
 	<sampleRate,
 	<>freq,*/
 
@@ -46,6 +46,8 @@ ClioSound {
 
 	sampleRate { ^this.buffer.sampleRate }
 
+	length { ^(this.numFrames / this.sampleRate) }
+
 	play { ^this.buffer.play }
 
 	freq {}
@@ -67,6 +69,7 @@ ClioSound {
 	// }
 
 }
+
 
 
 /*	initMe { arg name, path;

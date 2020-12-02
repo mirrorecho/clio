@@ -28,23 +28,36 @@ ClioBuildPatterns : ClioPatternLibrary {
 		this.putModFunc({arg self, pattern, kwargs;
 			pattern;
 		});
-		this.putKwargs(IdentityDictionary(*[
-			streamKeys:[\note, \dur, \amp],
-		]));
+		this.putKwargs([streamKeys:[\note, \dur, \amp],].asDict);
 	}
 
-	putKwargs {arg kwargs ... args;
+	putKwargs {arg kwargs=IdentityDictionary() ... args;
 		this.put(*(args++[\_kwargs, kwargs]));
 	}
+	addKwargs {arg kwargs ... args;
+		// NOTE: we're NOT calling getKwargs here,
+		// since we don't want to get wildcard '*' kwargs
+		var existingKwargs = this.at(*(args++[\_kwargs])) ?? ();
+		this.putKwargs(existingKwargs++kwargs, *args);
+	}
 	putFunc {arg func ... args;
-		this.put(*(args++[\_func, func]))
+		this.put(*(args++[\_func, func]));
 	}
 	putModFunc {arg modFunc ... args;
-		this.put(*(args++[\_modFunc, modFunc]))
+		this.put(*(args++[\_modFunc, modFunc]));
 	}
 
+	wildAt {arg subKey ... args;
+		var wildKey = ['*'] ++ args[args.size-1..] ++ [subKey];
+		^this.at(*wildKey);
+		// ^nil;
+	}
+
+	// NOTE, this will always return a dict of some kind
 	getKwargs {arg ... args;
-		^this.at(*(args++[\_kwargs]));
+		^this.wildAt(\_kwargs, *args) ++ (
+			this.at(*(args++[\_kwargs])) ?? ()
+		);
 	}
 	getTreeKwargs {arg ... args;
 		// not terribly elegant, but this works...
@@ -52,14 +65,12 @@ ClioBuildPatterns : ClioPatternLibrary {
 		var myKey = [];
 		args.do{|a|
 			myKey = myKey++[a];
-			myKwargs = myKwargs ++ (
-				this.getKwargs(*myKey) ?? ()
-			)
+			myKwargs = myKwargs ++ this.getKwargs(*myKey) ?? ();
 		};
 		^myKwargs;
 	}
 	getFunc {arg ... args;
-		^this.at(*(args++[\_func]));
+		^this.at(*(args++[\_func])) ?? {this.wildAt(\_func, *args)};
 	}
 	getTreeFunc {arg ... args;
 		// even less elegant than getTreeKwargs, but again, works...
@@ -72,7 +83,7 @@ ClioBuildPatterns : ClioPatternLibrary {
 		^myFunc;
 	}
 	getModFunc {arg ... args;
-		^this.at(*(args++[\_modFunc]));
+		^this.at(*(args++[\_modFunc])) ?? {this.wildAt(\_modFunc, *args)};
 	}
 	getP {arg ... args;
 		var myKwargs = this.getTreeKwargs(*args);
@@ -91,7 +102,38 @@ ClioBuildPatterns : ClioPatternLibrary {
 		^myPattern;
 	}
 
-	formPar {} // TO IMPLEMENT
-	parForm {} // TO IMPLEMENT
+	placeAt {arg key ... args;
+
+		args.pairsDo{|k,v|
+			if (k.isKindOf(Symbol), {
+				if (k==\_func, {this.putFunc(v,*key.asArray)}, {
+					if (k==\_modFunc, {this.putModFunc(v,*key.asArray)}, {
+						this.addKwargs([k,v].asDict, *key.asArray);
+					});
+				});
+			},
+			{
+				if (k.isString, {k=k.asSymbol;});
+				this.placeAt(key++k.asArray, *v);
+			}
+			);
+		};
+	}
+
+	place {arg ... args;
+		this.placeAt([], *args);
+	}
+
+	formPar {arg ... args;
+		^ClioPseq(args.collect{|f|
+			ClioPpar(f[1].clump(2).collect{|p|
+				var myKey = [f[0], p[0]]++p[1].asArray;
+				myKey.postln;
+				this.getP(*myKey);
+			}.asArray);
+		});
+	}
+
+	parForm {arg ... args;}
 
 }
